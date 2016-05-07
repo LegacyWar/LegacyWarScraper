@@ -1,3 +1,5 @@
+from bson.son import SON
+
 class ScraperModel:
     def __init__(self, db):
         self.db = db
@@ -15,3 +17,11 @@ class ScraperModel:
         result = _leaderboards[0] if _leaderboards else {};
 
         return result
+
+    def buildLeaderboard(self):
+        pipeline = [
+            {"$sort": SON([("count", -1), ("_id", -1)])},
+            {"$limit": 10}
+        ]
+        _reps = self.db.repositories.aggregate(pipeline)
+        return [ repo for repo in _reps ]

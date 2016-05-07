@@ -24,6 +24,8 @@ model = ScraperModel(db)
 
 @app.route('/')
 def data():
+    x = model.buildLeaderboard()
+    print(x)
     leaderboard = model.getLeaderboard()
     return json_util.dumps(leaderboard)
 
