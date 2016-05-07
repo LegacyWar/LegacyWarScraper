@@ -1,6 +1,8 @@
-from github import Github
+import os
 import json
-import pymongo
+
+from github import Github
+from pymongo import MongoClient
 from flask import Flask
 
 app = Flask(__name__)
@@ -11,6 +13,9 @@ with open('config.json') as config_file:
 username = config['github']['username']
 password = config['github']['password']
 
+docker_port_id = "LEGACYWAR_DB_1_PORT_27017_TCP_ADDR"
+client = MongoClient(os.environ[docker_port_id], 27017)
+db = client.lwdb
 
 @app.route('/')
 def data():
