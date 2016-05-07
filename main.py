@@ -3,7 +3,7 @@ import json
 
 from github import Github
 from pymongo import MongoClient
-from flask import Flask
+from flask import Flask, jsonify
 from bson import json_util
 
 from Scraper.ScraperModel import ScraperModel
@@ -24,10 +24,9 @@ model = ScraperModel(db)
 
 @app.route('/')
 def data():
-    x = model.buildLeaderboard()
-    print(x)
-    leaderboard = model.getLeaderboard()
-    return json_util.dumps(leaderboard)
+    _repos = model.buildLeaderboard()
+    repos = [(repo['full_name'], repo['repository_commits']) for repo in _repos]
+    return jsonify(repos=repos)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

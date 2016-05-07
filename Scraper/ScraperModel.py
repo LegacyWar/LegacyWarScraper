@@ -20,8 +20,14 @@ class ScraperModel:
 
     def buildLeaderboard(self):
         pipeline = [
+            {"$limit": 10},
             {"$sort": SON([("count", -1), ("_id", -1)])},
-            {"$limit": 10}
+            {"$lookup": {
+                'from': 'commits',
+                'localField': 'full_name',
+                'foreignField': 'full_name',
+                'as': 'repository_commits'
+            }}
         ]
         _reps = self.db.repositories.aggregate(pipeline)
         return [ repo for repo in _reps ]
